@@ -1,4 +1,13 @@
-/node_modules
-.cache
-/dist
-/.parcel-cache
+.cache/
+.parcel-cache/
+.vscode/*
+!.vscode/extensions.json
+dist/
+logs/
+node_modules/
+parcel-bundle-reports/
+
+npm-debug.log*
+sourcemap-info.json
+*.log
+*.min.js
