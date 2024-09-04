@@ -1,4 +1,3 @@
-// src/components/movie-view/movie-view.jsx
 import React from "react";
 
 export const MovieView = ({ movie, onBackClick }) => {
@@ -7,8 +6,8 @@ export const MovieView = ({ movie, onBackClick }) => {
       <div>
         <h2>{movie.title}</h2>
         <p>Description: {movie.description}</p>
-        <p>Genre: {movie.genre}</p>
-        <p>Director: {movie.director}</p>
+        <p>Genre: {movie.genre.name}</p>
+        <p>Director: {movie.director.name}</p>
         <img src={movie.imageURL} alt={movie.title} />
       </div>
       <button onClick={() => onBackClick()}>Back</button>

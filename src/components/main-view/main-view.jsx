@@ -1,43 +1,25 @@
 // src/components/main-view/main-view.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
+
 export const MainView = () => {
-  const [movies] = useState([
-    {
-      id: 1,
-      title: "The Matrix",
-      description:
-        "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
-      genre: "Action, Sci-Fi",
-      director: "The Wachowskis",
-      imageURL:
-        "https://m.media-amazon.com/images/I/51EG732BV3L._AC_SY679_.jpg",
-    },
-
-    {
-      id: 2,
-      title: "The Shawshank Redemption",
-      description:
-        "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-      genre: "Drama",
-      director: "Frank Darabont",
-      imageURL:
-        "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
-    },
-    {
-      id: 3,
-      title: "Interstellar",
-      description:
-        "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-      genre: "Adventure, Drama, Sci-Fi",
-      director: "Christopher Nolan",
-      imageURL:
-        "https://m.media-amazon.com/images/I/91kFYg4fX3L._AC_SY679_.jpg",
-    },
-  ]);
-
+  const [movies, setMovies] = useState([]); // Initialize state for movies
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  // Fetch movies from API
+  useEffect(() => {
+    fetch("https://moro-flix-f9ac320c9e61.herokuapp.com/movies")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => setMovies(data))
+      .catch((error) => console.error("Error fetching movies: ", error));
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   const onMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -51,11 +33,29 @@ export const MainView = () => {
     return <MovieView movie={selectedMovie} onBackClick={onBackClick} />;
   }
 
+  console.log(movies);
+
   return (
     <div>
       {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} />
+        <MovieCard
+          key={movie._id} // Use _id as the key
+          movie={movie}
+          onMovieClick={onMovieClick}
+        />
       ))}
     </div>
   );
+};
+
+// PropTypes for MainView if needed (it depends on whether you expect props to be passed to MainView)
+MainView.propTypes = {
+  // If you're passing movies as a prop to MainView, uncomment the next line
+  // movies: PropTypes.arrayOf(PropTypes.shape({
+  //   _id: PropTypes.string.isRequired,
+  //   Title: PropTypes.string.isRequired,
+  //   Description: PropTypes.string.isRequired,
+  // })).isRequired,
+  // If you're passing the onMovieClick handler as a prop, uncomment the next line
+  // onMovieClick: PropTypes.func.isRequired,
 };
