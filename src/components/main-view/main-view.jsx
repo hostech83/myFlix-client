@@ -1,16 +1,26 @@
-// src/components/main-view/main-view.jsx
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
+import { LoginView } from "../login-view/login-view";
+import { SignupView } from "../signup-view/signup-view";
 
 export const MainView = () => {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedToken = localStorage.getItem("token");
+  const [user, setUser] = useState(null); // Correct null value
+  const [token, setToken] = useState(null); // Add token state
   const [movies, setMovies] = useState([]); // Initialize state for movies
   const [selectedMovie, setSelectedMovie] = useState(null);
 
   // Fetch movies from API
   useEffect(() => {
-    fetch("https://moro-flix-f9ac320c9e61.herokuapp.com/movies")
+    if (!token) {
+      return;
+    }
+    fetch("https://moro-flix-f9ac320c9e61.herokuapp.com/movies", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -19,7 +29,7 @@ export const MainView = () => {
       })
       .then((data) => setMovies(data))
       .catch((error) => console.error("Error fetching movies: ", error));
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, [token]); // Include token in the dependency array
 
   const onMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -29,6 +39,26 @@ export const MainView = () => {
     setSelectedMovie(null);
   };
 
+  // If no user is logged in, show the login form
+  if (!user) {
+    return (
+      <>
+        <LoginView
+          onLoggedIn={(user, token) => {
+            setUser(user);
+            setToken(token);
+            // Store user and token in localStorage
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("token", token);
+          }}
+        />
+        or
+        <SignupView />
+      </>
+    );
+  }
+
+  // If a movie is selected, show the movie details
   if (selectedMovie) {
     return <MovieView movie={selectedMovie} onBackClick={onBackClick} />;
   }
@@ -37,6 +67,18 @@ export const MainView = () => {
 
   return (
     <div>
+      {/* Logout Button */}
+      <button
+        onClick={() => {
+          setUser(null);
+          setToken(null);
+          localStorage.clear(); // Clear localStorage on logout
+        }}
+      >
+        Logout
+      </button>
+
+      {/* Show the list of movies */}
       {movies.map((movie) => (
         <MovieCard
           key={movie._id} // Use _id as the key
@@ -48,14 +90,14 @@ export const MainView = () => {
   );
 };
 
-// PropTypes for MainView if needed (it depends on whether you expect props to be passed to MainView)
+// PropTypes for MainView if needed (depends on whether you expect props to be passed to MainView)
 MainView.propTypes = {
-  // If you're passing movies as a prop to MainView, uncomment the next line
-  // movies: PropTypes.arrayOf(PropTypes.shape({
-  //   _id: PropTypes.string.isRequired,
-  //   Title: PropTypes.string.isRequired,
-  //   Description: PropTypes.string.isRequired,
-  // })).isRequired,
-  // If you're passing the onMovieClick handler as a prop, uncomment the next line
-  // onMovieClick: PropTypes.func.isRequired,
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      Title: PropTypes.string.isRequired,
+      Description: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onMovieClick: PropTypes.func.isRequired,
 };
