@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
+//import PropTypes from "prop-types";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
+import Button from "react-bootstrap/Button";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
-  const [user, setUser] = useState(null); // Correct null value
-  const [token, setToken] = useState(null); // Add token state
+
+  const [user, setUser] = useState(storedUser); // Use storedUser to initialize
+  const [token, setToken] = useState(storedToken); // Use storedToken to initialize
   const [movies, setMovies] = useState([]); // Initialize state for movies
   const [selectedMovie, setSelectedMovie] = useState(null);
 
@@ -42,19 +46,27 @@ export const MainView = () => {
   // If no user is logged in, show the login form
   if (!user) {
     return (
-      <>
-        <LoginView
-          onLoggedIn={(user, token) => {
-            setUser(user);
-            setToken(token);
-            // Store user and token in localStorage
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("token", token);
-          }}
-        />
+      <Row className="justify-content-md-center">
+        <Col md={12} className="text-center my-3">
+          <h1>MyflixApp</h1>
+        </Col>
+        <Col md={5}>
+          <LoginView
+            onLoggedIn={(user, token) => {
+              setUser(user);
+              setToken(token);
+              // Store user and token in localStorage
+              localStorage.setItem("user", JSON.stringify(user));
+              localStorage.setItem("token", token);
+            }}
+          />
+        </Col>
         or
-        <SignupView />
-      </>
+        <Col md={5}>
+          {/* Signup Form */}
+          <SignupView />
+        </Col>
+      </Row>
     );
   }
 
@@ -63,12 +75,11 @@ export const MainView = () => {
     return <MovieView movie={selectedMovie} onBackClick={onBackClick} />;
   }
 
-  console.log(movies);
-
   return (
     <div>
       {/* Logout Button */}
       <button
+        variant="danger"
         onClick={() => {
           setUser(null);
           setToken(null);
@@ -79,25 +90,25 @@ export const MainView = () => {
       </button>
 
       {/* Show the list of movies */}
-      {movies.map((movie) => (
-        <MovieCard
-          key={movie._id} // Use _id as the key
-          movie={movie}
-          onMovieClick={onMovieClick}
-        />
-      ))}
+      <Row>
+        {movies.map((movie) => (
+          <Col className="mb-5" key={movie._id} md={3}>
+            {/* Use _id as the key */}
+            <MovieCard movie={movie} onMovieClick={onMovieClick} />
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };
-
 // PropTypes for MainView if needed (depends on whether you expect props to be passed to MainView)
-MainView.propTypes = {
-  movies: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      Title: PropTypes.string.isRequired,
-      Description: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  onMovieClick: PropTypes.func.isRequired,
-};
+//MainView.propTypes = {
+// movies: PropTypes.arrayOf(
+// PropTypes.shape({
+//_id: PropTypes.string.isRequired,
+// Title: PropTypes.string.isRequired,
+// Description: PropTypes.string.isRequired,
+// })
+// ).isRequired,
+// onMovieClick: PropTypes.func.isRequired,
+//};
