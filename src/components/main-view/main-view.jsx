@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; // Removed duplicate imports
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
+import { ProfileView } from "../profile-view/profile-view"; // Assuming you have this component
+import { NavigationBar } from "../navigation-bar/navigation-bar"; // Assuming you have this component
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -15,7 +16,6 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser); // Use storedUser to initialize
   const [token, setToken] = useState(storedToken); // Use storedToken to initialize
   const [movies, setMovies] = useState([]); // Initialize state for movies
-  const [selectedMovie, setSelectedMovie] = useState(null);
 
   // Fetch movies from API
   useEffect(() => {
@@ -33,25 +33,42 @@ export const MainView = () => {
       })
       .then((data) => setMovies(data))
       .catch((error) => console.error("Error fetching movies: ", error));
-  }, [token]); // Include token in the dependency array;
+  }, [token]); // Include token in the dependency array
 
   // Handle login
-  const handleLogin = (user, newToken) => {
+  const handleLogin = (user, token) => {
     setUser(user);
-    setToken(newToken);
+    setToken(token);
     localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("token", newToken);
+    localStorage.setItem("token", token);
   };
 
-  // If a movie is selected, show the movie details
-  if (selectedMovie) {
-    return <MovieView movie={selectedMovie} />;
-  }
+  // Logout function
+  const handleLogout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+  };
 
   return (
     <BrowserRouter>
+      <NavigationBar user={user} onLoggedOut={handleLogout} />
       <Row className="justify-content-md-center">
         <Routes>
+          <Route
+            path="/login"
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Col md={5}>
+                    <LoginView onLoggedIn={handleLogin} />
+                  </Col>
+                )}
+              </>
+            }
+          />
           <Route
             path="/signup"
             element={
@@ -67,14 +84,18 @@ export const MainView = () => {
             }
           />
           <Route
-            path="/login"
+            path="/users/:Username"
             element={
               <>
-                {user ? (
-                  <Navigate to="/" />
+                {!user ? (
+                  <Navigate to="/login" replace />
                 ) : (
                   <Col md={5}>
-                    <LoginView onLoggedIn={(user) => setUser(user)} />
+                    <ProfileView
+                      user={user}
+                      token={token}
+                      onLoggedOut={handleLogout} // Updated reference
+                    />
                   </Col>
                 )}
               </>
@@ -87,10 +108,15 @@ export const MainView = () => {
                 {!user ? (
                   <Navigate to="/login" replace />
                 ) : movies.length === 0 ? (
-                  <Col>The list is empty!</Col>
+                  <Col>The list is empty</Col>
                 ) : (
                   <Col md={8}>
-                    <movieView movies={movies} />
+                    <MovieView
+                      movies={movies}
+                      user={user}
+                      token={token}
+                      setUser={setUser}
+                    />
                   </Col>
                 )}
               </>
@@ -103,7 +129,7 @@ export const MainView = () => {
                 {!user ? (
                   <Navigate to="/login" replace />
                 ) : movies.length === 0 ? (
-                  <Col>The list is empty!</Col>
+                  <Col>The list is empty</Col>
                 ) : (
                   <>
                     {movies.map((movie) => (
