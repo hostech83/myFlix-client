@@ -22,13 +22,19 @@ export const MovieCard = ({ movie, isFavorite, onToggleFavorite }) => {
 
   return (
     <Card className="h-100">
-      <Card.Img variant="top" src={movie.image || "default_image_url_here"} />
-      <Card.Body>
+      <Card.Img
+        variant="top"
+        src={movie.imageURL || "default_image_url_here"}
+      />
+      {/* Properly closed Card.Body */}
+      <Card.Body className="mb-3 mt-3">
         <Card.Title>{movie.title}</Card.Title>
         <Card.Text>Directed by {movie.director.name}</Card.Text>
+        {/* Link to open the movie */}
         <Link to={`/movies/${encodeURIComponent(movie._id)}`}>
           <Button variant="link">Open</Button>
         </Link>
+        {/* Favorite button */}
         <Button
           variant={isFavorited ? "danger" : "secondary"}
           onClick={handleFavoriteMovies}

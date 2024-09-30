@@ -50,6 +50,45 @@ export const MainView = () => {
     localStorage.clear();
   };
 
+  //const onToggleFavorite = (movieId) => {
+  // check if the movide is favorite or not
+  // if is fav, send a delete to the API
+  // if not, send a POST
+  // method: isFav ? 'DELETE' : 'POST'
+  //};
+
+  const onToggleFavorite = (movieId) => {
+    const isFavorite = user.FavoriteMovies.includes(movieId);
+
+    // Determine the HTTP method: 'POST' to add or 'DELETE' to remove
+    const method = isFavorite ? "DELETE" : "POST";
+
+    fetch(
+      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.Username}/movies/${movieId}`,
+      {
+        method: method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update favorite movies");
+        }
+        return response.json();
+      })
+      .then((updatedUser) => {
+        // Update the user state with the new list of favorite movies
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      })
+      .catch((error) => {
+        console.error("Error updating favorite movies:", error);
+      });
+  };
+
   return (
     <BrowserRouter>
       <NavigationBar user={user} onLoggedOut={handleLogout} />
@@ -84,7 +123,7 @@ export const MainView = () => {
             }
           />
           <Route
-            path="/users/:Username"
+            path="/profile"
             element={
               <>
                 {!user ? (
@@ -94,6 +133,7 @@ export const MainView = () => {
                     <ProfileView
                       user={user}
                       token={token}
+                      setUser={setUser}
                       onLoggedOut={handleLogout} // Updated reference
                     />
                   </Col>
@@ -131,13 +171,17 @@ export const MainView = () => {
                 ) : movies.length === 0 ? (
                   <Col>The list is empty</Col>
                 ) : (
-                  <>
-                    {movies.map((movie) => (
-                      <Col className="mb-4" key={movie.id} md={3}>
-                        <MovieCard movie={movie} />
-                      </Col>
-                    ))}
-                  </>
+                  movies.map((movie) => (
+                    <Col className="mb-4" key={movie._id} md={3}>
+                      <MovieCard
+                        movie={movie}
+                        onToggleFavorite={onToggleFavorite}
+                        isFavorite={user.favoriteMovies.find(
+                          (id) => id === movie._id
+                        )}
+                      />
+                    </Col>
+                  ))
                 )}
               </>
             }

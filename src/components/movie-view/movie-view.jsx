@@ -7,7 +7,7 @@ export const MovieView = ({ movies }) => {
   const { movieId } = useParams();
 
   // Find the movie by its id
-  const movie = movies.find((m) => m.id === movieId);
+  const movie = movies.find((m) => m._id === movieId);
 
   // If the movie is not found, you might want to display an error or a message
   if (!movie) {
@@ -17,7 +17,7 @@ export const MovieView = ({ movies }) => {
   return (
     <div>
       <div>
-        <img className="w-100" src={movie.image} alt={movie.title} />
+        <img className="w-100" src={movie.imageURL} alt={movie.title} />
       </div>
       <div>
         <span>Description: </span>
