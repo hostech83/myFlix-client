@@ -29,7 +29,7 @@ export const MovieCard = ({ movie, isFavorite, onToggleFavorite }) => {
       {/* Properly closed Card.Body */}
       <Card.Body className="mb-3 mt-3">
         <Card.Title>{movie.title}</Card.Title>
-        <Card.Text>Directed by {movie.director.name}</Card.Text>
+        {/*<Card.Text>{movie.director.name}</Card.Text>*/}
         {/* Link to open the movie */}
         <Link to={`/movies/${encodeURIComponent(movie._id)}`}>
           <Button variant="link">Open</Button>

@@ -58,7 +58,11 @@ export const MainView = () => {
   //};
 
   const onToggleFavorite = (movieId) => {
-    const isFavorite = user.FavoriteMovies.includes(movieId);
+    // Safeguard against undefined FavoriteMovies
+    const favoriteMovies = user?.FavoriteMovies || [];
+
+    // Check if the movie is already a favorite
+    const isFavorite = favoriteMovies.includes(movieId);
 
     // Determine the HTTP method: 'POST' to add or 'DELETE' to remove
     const method = isFavorite ? "DELETE" : "POST";
@@ -87,6 +91,15 @@ export const MainView = () => {
       .catch((error) => {
         console.error("Error updating favorite movies:", error);
       });
+  };
+
+  // Generate the list of similar movies
+  const getSimilarMovies = (currentMovie) => {
+    return movies.filter(
+      (movie) =>
+        movie.genre.name === currentMovie.genre.name &&
+        movie._id !== currentMovie._id // Exclude the current movie
+    );
   };
 
   return (
@@ -153,6 +166,7 @@ export const MainView = () => {
                   <Col md={8}>
                     <MovieView
                       movies={movies}
+                      getSimilarMovies={getSimilarMovies} // Pass the similar movies function
                       user={user}
                       token={token}
                       setUser={setUser}

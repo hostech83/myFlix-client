@@ -1,9 +1,11 @@
+import React from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import React from "react";
+import { MovieCard } from "../movie-card/movie-card"; // Import MovieCard component
+
 import "./movie-view.scss";
 
-export const MovieView = ({ movies }) => {
+export const MovieView = ({ movies, getSimilarMovies }) => {
   const { movieId } = useParams();
 
   // Find the movie by its id
@@ -13,6 +15,9 @@ export const MovieView = ({ movies }) => {
   if (!movie) {
     return <div>Movie not found</div>;
   }
+
+  // Get similar movies based on the current movie
+  const similarMovies = getSimilarMovies(movie);
 
   return (
     <div>
@@ -34,6 +39,18 @@ export const MovieView = ({ movies }) => {
       <Link to={`/`}>
         <button className="back-button">Back</button>
       </Link>
+
+      {/* Display the Similar Movies */}
+      <h3>Similar Movies</h3>
+      <div className="similar-movies">
+        {similarMovies.length > 0 ? (
+          similarMovies.map((similarMovie) => (
+            <MovieCard key={similarMovie._id} movie={similarMovie} />
+          ))
+        ) : (
+          <p>No similar movies available</p>
+        )}
+      </div>
     </div>
   );
 };
