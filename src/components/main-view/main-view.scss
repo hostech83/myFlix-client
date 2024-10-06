@@ -1,0 +1,42 @@
+$secondaryBGMixer: rgba(156, 169, 182, 0.7);
+$primaryColor: seagreen;
+
+.searchContainer {
+  flex-direction: column;
+}
+
+input.search-bar,
+select.filter-bar {
+  max-width: 300px !important;
+  margin: 5px auto;
+  border-color: $primaryColor !important;
+  // color: $primaryColor !important;
+}
+
+.movieCard:hover {
+  animation: 0.5s cardPop;
+  cursor: pointer;
+}
+
+.loading {
+  font-size: 42px;
+  font-weight: bold;
+  color: $primaryColor;
+  text-align: center;
+  padding-top: 100px;
+  height: 100vh;
+}
+
+@keyframes cardPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.99);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@import "~bootstrap/scss/bootstrap.scss";
