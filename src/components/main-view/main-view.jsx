@@ -16,6 +16,8 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser); // Use storedUser to initialize
   const [token, setToken] = useState(storedToken); // Use storedToken to initialize
   const [movies, setMovies] = useState([]); // Initialize state for movies
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterTerm, setFilterTerm] = useState("");
 
   // Fetch movies from API
   useEffect(() => {
