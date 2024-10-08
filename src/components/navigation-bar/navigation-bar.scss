@@ -1,45 +1,27 @@
-/* Basic styling for the navbar */
 .navigation-bar {
-  background-color: #f8f9fa; /* Light background color */
-  border-bottom: 2px solid #dee2e6; /* Bottom border for a clean separation */
-  padding: 0.75rem 1rem;
-}
+  padding: 0.5rem 1rem; // Reduce padding inside the navbar
+  font-size: 0.9rem; // Adjust the font size to be smaller for links
 
-.navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #007bff; /* Custom color for the brand */
-}
-
-.navbar-brand:hover {
-  color: #0056b3; /* Hover effect for the brand */
-}
-
-.nav-link-custom {
-  font-size: 1.1rem;
-  margin-right: 1rem;
-  color: #333; /* Default color for links */
-  transition: color 0.3s ease;
-}
-
-.nav-link-custom:hover {
-  color: #007bff; /* Hover effect for links */
-}
-
-.logout-link {
-  color: #dc3545; /* Red color for logout link */
-}
-
-.logout-link:hover {
-  color: #c82333; /* Darker red on hover */
-}
-
-@media (max-width: 767px) {
   .navbar-brand {
-    font-size: 1.25rem;
+    font-size: 1.2rem; // Slightly larger for the brand name
   }
 
-  .nav-link-custom {
-    font-size: 1rem;
+  .navbar-nav .nav-link {
+    padding: 0.5rem; // Reduce padding inside navigation links
   }
+
+  .navbar-toggler {
+    padding: 0.25rem 0.5rem; // Compact toggle button for mobile
+  }
+}
+@media (max-width: 576px) {
+  .navigation-bar {
+    padding: 0.25rem 0.5rem; // Further reduce padding for small screens
+  }
+  .navbar-nav .nav-link {
+    padding: 0.5rem; // Make links more compact
+  }
+}
+.navigation-bar {
+  line-height: 1.2; // Control line height to reduce extra space
 }

@@ -17,7 +17,8 @@ export const MovieView = ({ movies, getSimilarMovies }) => {
   }
 
   // Get similar movies based on the current movie
-  const similarMovies = getSimilarMovies(movie);
+  // const similarMovies = getSimilarMovies(movie);
+  const similarMovies = [];
 
   return (
     <div>

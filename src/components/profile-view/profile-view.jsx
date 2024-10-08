@@ -4,14 +4,16 @@ import { MovieCard } from "../movie-card/movie-card";
 import { useNavigate } from "react-router-dom";
 
 export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
-  const [username, setUsername] = useState(user.Username || "");
+  const [username, setUsername] = useState(user.username || "");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState(user.Email || "");
-  const [birthday, setBirthday] = useState(user.Birthday || "");
+  const [email, setEmail] = useState(user.email || "");
+  const [birthday, setBirthday] = useState(user.birthday || "");
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [watchlistMovies, setWatchlistMovies] = useState([]);
   const [userData, setUserData] = useState(null); // New state for user data
   const navigate = useNavigate();
+
+  console.log(user);
 
   // Fetch all users and filter for the current user
   useEffect(() => {
@@ -20,26 +22,26 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        const currentUser = data.find((u) => u.Username === user.Username);
+        const currentUser = data.find((u) => u.username === user.username);
         setUserData(currentUser);
-        setUsername(currentUser.Username);
-        setEmail(currentUser.Email);
-        setBirthday(currentUser.Birthday);
+        setUsername(currentUser.username);
+        setEmail(currentUser.email);
+        setBirthday(currentUser.birthday);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, [token, user.Username]);
+  }, [token, user.username]);
 
   useEffect(() => {
-    if (movies?.length > 0 && userData?.FavoriteMovies?.length > 0) {
+    if (movies?.length > 0 && userData?.favoriteMovies?.length > 0) {
       const favMovies = movies.filter((movie) =>
-        userData.FavoriteMovies.includes(movie._id)
+        userData.favoriteMovies.includes(movie._id)
       );
       setFavoriteMovies(favMovies);
     }
 
-    if (movies?.length > 0 && userData?.Watchlist?.length > 0) {
+    if (movies?.length > 0 && userData?.watchlist?.length > 0) {
       const watchlist = movies.filter((movie) =>
         userData.Watchlist.includes(movie._id)
       );
@@ -52,7 +54,7 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
     e.preventDefault();
 
     fetch(
-      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.Username}`,
+      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.username}`,
       {
         method: "PUT",
         headers: {
@@ -60,10 +62,10 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          Username: username,
-          Password: password,
-          Email: email,
-          Birthday: birthday,
+          username,
+          password,
+          email,
+          birthday,
         }),
       }
     )
@@ -79,7 +81,7 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
   // Handle removing user
   const handleDeregister = () => {
     fetch(
-      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.Username}`,
+      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.username}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
@@ -95,7 +97,7 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
 
   const handleRemoveFavorite = (movieId) => {
     fetch(
-      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.Username}/movies/${movieId}`,
+      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.username}/movies/${movieId}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
@@ -122,18 +124,18 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
         {/* Left Column - Current Info */}
         <Col md={6}>
           <div className="profile-info ">
-            <h3>{userData.Username}'s Current Info</h3>
+            <h3>{userData.username}'s Current Info</h3>
             <p>
               <strong>Username: </strong>
-              {userData.Username}
+              {userData.username}
             </p>
             <p>
               <strong>Email: </strong>
-              {userData.Email}
+              {userData.email}
             </p>
             <p>
               <strong>Birthday: </strong>
-              {userData.Birthday}
+              {userData.birthday}
             </p>
           </div>
 
