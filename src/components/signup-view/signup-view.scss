@@ -1,27 +1,21 @@
 $primary-color: #007bff; // Bootstrap primary color
 $form-background: #ffffff; // White background for form
-$card-background: rgba(
-  255,
-  255,
-  255,
-  0.9
-); // Light background for cards with transparency
+$card-background: #f8f9fa; // Light background for cards
 $form-border-radius: 8px; // Rounded corners for the form
-$text-color: #ffffff; // White text color for labels
 
-.login-view {
+.signup-view {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh; // Full viewport height for centering
   background-color: black; // Set background to black
 
-  .card {
-    width: 400px; // Fixed width for the card
+  .form-container {
+    width: 400px; // Fixed width for the form
     border-radius: $form-border-radius;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); // Shadow for depth
-    background-color: $card-background; // Set card background
-    padding: 2rem; // Padding for the card
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: $form-background;
+    padding: 2rem; // Padding for form
   }
 
   h2 {
@@ -35,7 +29,6 @@ $text-color: #ffffff; // White text color for labels
 
     .form-label {
       font-weight: bold; // Make labels bold
-      color: $text-color; // White color for labels
     }
 
     .form-control {

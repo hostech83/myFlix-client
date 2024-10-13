@@ -1,0 +1,67 @@
+$card-background: #f0f0f0; // Light gray background for the card
+$text-color: #333333; // Dark text color for contrast
+$favorite-color: #ff4757; // Color for favorite icon
+$visible-color: #3498db; // Color for visibility icon
+$border-radius: 8px; // Border radius for card corners
+
+.movieCard {
+  background-color: $card-background; // Set card background color
+  border: none; // Remove default border
+  border-radius: $border-radius; // Rounded corners
+  transition: transform 0.2s ease; // Smooth scaling effect on hover
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // Light shadow for depth
+  overflow: hidden; // Ensure content doesn't overflow out of the card
+
+  &:hover {
+    transform: scale(1.05); // Slightly scale up on hover
+  }
+
+  // Image styles to ensure it wraps the card corners
+  .card-img-top {
+    width: 100%; // Make image take the full width of the card
+    height: auto; // Maintain aspect ratio
+    border-top-left-radius: $border-radius; // Round top-left corner
+    border-top-right-radius: $border-radius; // Round top-right corner
+  }
+
+  .card-img-overlay {
+    display: flex; // Use flex for overlay alignment
+    justify-content: flex-end; // Align icons to the right
+    align-items: flex-start; // Align items to the top
+  }
+
+  .card-body {
+    padding: 1.5rem; // Add padding for spacing
+    background-color: #e1e576; // Set background color to white
+    border-bottom-left-radius: $border-radius; // Round bottom-left corner
+    border-bottom-right-radius: $border-radius; // Round bottom-right corner
+
+    .card-title {
+      font-size: 1.25rem; // Increase font size for the title
+      font-weight: bold; // Make title bold
+      color: $text-color; // Use defined text color
+      margin-bottom: 0.5rem; // Spacing below the title
+
+      small {
+        font-size: 0.9rem; // Slightly smaller font for the year
+        color: darken($text-color, 40%); // Darker color for year for contrast
+      }
+    }
+
+    .card-subtitle {
+      font-size: 0.9rem; // Set subtitle font size
+      color: darken($text-color, 20%); // Darker color for subtitle text
+      margin-top: 0.5rem; // Margin on top for spacing
+
+      .tomato {
+        margin-right: 5px; // Space between tomato icon and rating
+        vertical-align: middle; // Align the icon with the text
+      }
+
+      // Add responsive styles
+      @media (max-width: 576px) {
+        font-size: 0.85rem; // Adjust font size for smaller screens
+      }
+    }
+  }
+}

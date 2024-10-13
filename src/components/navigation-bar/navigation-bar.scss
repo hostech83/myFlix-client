@@ -1,27 +1,44 @@
+/* navigation-bar.scss */
 .navigation-bar {
-  padding: 0.5rem 1rem; // Reduce padding inside the navbar
-  font-size: 0.9rem; // Adjust the font size to be smaller for links
+  background-color: #033465; /* Dark background for the navbar */
+  padding: 10px;
 
   .navbar-brand {
-    font-size: 1.2rem; // Slightly larger for the brand name
-  }
-
-  .navbar-nav .nav-link {
-    padding: 0.5rem; // Reduce padding inside navigation links
+    color: #fff; /* White color for brand text */
+    font-size: 1.5rem; /* Larger font size for the brand */
+    &:hover {
+      color: #f8f9fa; /* Slightly lighter on hover */
+    }
   }
 
   .navbar-toggler {
-    padding: 0.25rem 0.5rem; // Compact toggle button for mobile
+    border: none;
+    outline: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .nav-link {
+    color: #f8f9fa; /* White for nav links */
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    &:hover {
+      color: #007bff; /* Blue on hover */
+      background-color: #495057; /* Darker background on hover */
+      border-radius: 5px;
+    }
+  }
+
+  .nav-link.active {
+    background-color: #007bff; /* Highlight active link */
+    border-radius: 5px;
+    color: white !important;
   }
 }
-@media (max-width: 576px) {
-  .navigation-bar {
-    padding: 0.25rem 0.5rem; // Further reduce padding for small screens
-  }
-  .navbar-nav .nav-link {
-    padding: 0.5rem; // Make links more compact
-  }
-}
-.navigation-bar {
-  line-height: 1.2; // Control line height to reduce extra space
+
+/* Optional: Style for the main content */
+.main-content {
+  margin-top: 60px; /* Adjust this based on the size of the navbar */
 }

@@ -1,37 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Col, Container } from "react-bootstrap";
+import { Button, Form, Row, Col, Container, Card } from "react-bootstrap";
 import { MovieCard } from "../movie-card/movie-card";
 import { useNavigate } from "react-router-dom";
+import "./profile-view.scss";
 
 export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
-  const [username, setUsername] = useState(user.username || "");
+  const [username, setUsername] = useState(user?.username || "");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState(user.email || "");
-  const [birthday, setBirthday] = useState(user.birthday || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [birthday, setBirthday] = useState(user?.birthday || "");
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [watchlistMovies, setWatchlistMovies] = useState([]);
-  const [userData, setUserData] = useState(null); // New state for user data
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
-  console.log(user);
-
-  // Fetch all users and filter for the current user
   useEffect(() => {
-    fetch("https://moro-flix-f9ac320c9e61.herokuapp.com/users", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    console.log("User:", user);
+    if (!user || !user.username) return;
+
+    fetch(
+      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.username}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
-        const currentUser = data.find((u) => u.username === user.username);
-        setUserData(currentUser);
-        setUsername(currentUser.username);
-        setEmail(currentUser.email);
-        setBirthday(currentUser.birthday);
+        if (data && data.username) {
+          setUserData(data);
+          setUsername(data.username);
+          setEmail(data.email);
+          setBirthday(data.birthday);
+        } else {
+          throw new Error("User invalid");
+        }
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, [token, user.username]);
+  }, [token, user]);
 
   useEffect(() => {
     if (movies?.length > 0 && userData?.favoriteMovies?.length > 0) {
@@ -43,13 +50,12 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
 
     if (movies?.length > 0 && userData?.watchlist?.length > 0) {
       const watchlist = movies.filter((movie) =>
-        userData.Watchlist.includes(movie._id)
+        userData.watchlist.includes(movie._id)
       );
       setWatchlistMovies(watchlist);
     }
   }, [movies, userData]);
 
-  // Handle profile update
   const handleUpdate = (e) => {
     e.preventDefault();
 
@@ -78,7 +84,6 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
       .catch((error) => alert("Error updating profile: " + error));
   };
 
-  // Handle removing user
   const handleDeregister = () => {
     fetch(
       `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.username}`,
@@ -114,112 +119,125 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
   };
 
   if (!userData) {
-    return <div>Loading...</div>; // Display loading state until user data is fetched
+    return <div>Loading...</div>;
   }
 
   return (
     <Container>
-      {/* Account Info and Update Section */}
       <Row className="account-info mt-5 mb-5">
-        {/* Left Column - Current Info */}
-        <Col md={6}>
-          <div className="profile-info ">
-            <h3>{userData.username}'s Current Info</h3>
-            <p>
-              <strong>Username: </strong>
-              {userData.username}
-            </p>
-            <p>
-              <strong>Email: </strong>
-              {userData.email}
-            </p>
-            <p>
-              <strong>Birthday: </strong>
-              {userData.birthday}
-            </p>
-          </div>
+        <Col xs={12} sm={8} md={8} lg={8}>
+          <Card>
+            <Card.Header>
+              <h3>{userData.username}'s Current Info</h3>
+            </Card.Header>
+            <Card.Body>
+              <p>
+                <strong>Username: </strong>
+                {userData.username}
+              </p>
+              <p>
+                <strong>Email: </strong>
+                {userData.email}
+              </p>
+              <p>
+                <strong>Birthday: </strong>
+                {userData.birthday}
+              </p>
+            </Card.Body>
+          </Card>
 
-          {/* Delete Account Section */}
-          <div className="delete-account mt-4">
-            <h4>Want to delete your account?</h4>
-            <p>Careful! There's no confirmation or turning back.</p>
-            <Button variant="danger" onClick={handleDeregister}>
-              Delete Account
-            </Button>
-          </div>
+          <Card className="mt-4">
+            <Card.Header>
+              <h4>Want to delete your account?</h4>
+            </Card.Header>
+            <Card.Body>
+              <p>Careful! There's no confirmation or turning back.</p>
+              <Button variant="danger" onClick={handleDeregister}>
+                Delete Account
+              </Button>
+            </Card.Body>
+          </Card>
         </Col>
 
-        {/* Right Column - Update Info */}
-        <Col md={6}>
-          <h3>Update your Info</h3>
-          <Form onSubmit={handleUpdate}>
-            <Form.Group controlId="formUsername" className="mb-3">
-              <Form.Label>Username:</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter new username..."
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                minLength={3}
-                required
-              />
-            </Form.Group>
+        <Col md={8}>
+          <Card>
+            <Card.Header>
+              <h3>Update your Info</h3>
+            </Card.Header>
+            <Card.Body>
+              <Form onSubmit={handleUpdate}>
+                <Form.Group controlId="formUsername" className="mb-3">
+                  <Form.Label>Username:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter new username..."
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    minLength={3}
+                    required
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="formPassword" className="mb-3">
-              <Form.Label>Password:</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter new password..."
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
+                <Form.Group controlId="formPassword" className="mb-3">
+                  <Form.Label>Password:</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Enter new password..."
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="formEmail" className="mb-3">
-              <Form.Label>Email:</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter new email address..."
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </Form.Group>
+                <Form.Group controlId="formEmail" className="mb-3">
+                  <Form.Label>Email:</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter new email address..."
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="formBirthday" className="mb-3">
-              <Form.Label>Birthday:</Form.Label>
-              <Form.Control
-                type="date"
-                value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
-              />
-            </Form.Group>
+                <Form.Group controlId="formBirthday" className="mb-3">
+                  <Form.Label>Birthday:</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={birthday}
+                    onChange={(e) => setBirthday(e.target.value)}
+                  />
+                </Form.Group>
 
-            <Button variant="success" type="submit">
-              Submit
-            </Button>
-          </Form>
+                <Button variant="success" type="submit">
+                  Submit
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
 
-      {/* Favorite Movies Section */}
       <hr />
       <Row className="mt-3">
-        <h2>{userData.Username}'s Favorite Movies:</h2>
+        <h2>{user.username}'s Favorite Movies:</h2>
         {favoriteMovies.length > 0 ? (
           favoriteMovies.map((movie) => (
             <Col
               sm={6}
-              md={4}
-              lg={3}
+              md={6}
+              lg={6}
               key={movie._id}
               className="profileCard-container mb-4"
             >
-              <MovieCard
-                movie={movie}
-                isFavorite={true}
-                onToggleFavorite={() => handleRemoveFavorite(movie._id)}
-              />
+              <Card>
+                <Card.Body>
+                  <MovieCard
+                    movie={movie}
+                    isFavorite={true}
+                    onToggleFavorite={() => handleRemoveFavorite(movie._id)}
+                  />
+                </Card.Body>
+              </Card>
             </Col>
           ))
         ) : (
@@ -229,10 +247,9 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
         )}
       </Row>
 
-      {/* Watchlist Section */}
       <hr />
       <Row className="mt-5">
-        <h2>{userData.Username}'s Watchlist:</h2>
+        <h2>{user.username}'s Watchlist:</h2>
         {watchlistMovies.length > 0 ? (
           watchlistMovies.map((movie) => (
             <Col
@@ -242,7 +259,11 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
               key={movie._id}
               className="profileCard-container mb-4"
             >
-              <MovieCard movie={movie} />
+              <Card>
+                <Card.Body>
+                  <MovieCard movie={movie} />
+                </Card.Body>
+              </Card>
             </Col>
           ))
         ) : (

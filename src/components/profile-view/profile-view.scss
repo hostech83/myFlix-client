@@ -1,0 +1,67 @@
+.account-info {
+  display: flex;
+  justify-content: space-between;
+
+  .profile-card {
+    background-color: #f8f9fa; /* Light background for cards */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out;
+    width: 90%; /* Increase the width of the card */
+
+    h3 {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #343a40; /* Dark text */
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #495057;
+    }
+
+    &:hover {
+      transform: translateY(-5px); /* Hover effect */
+    }
+  }
+
+  .current-info,
+  .update-info {
+    flex: 1; /* Allow the columns to take more space */
+    display: flex;
+    justify-content: center; /* Center the card inside */
+  }
+
+  .current-info .profile-card {
+    background-color: #e9ecef; /* Slightly different background */
+  }
+
+  .update-info .profile-card {
+    background-color: #fff; /* Slightly different background */
+  }
+
+  .delete-account {
+    background-color: #f8d7da;
+    border-radius: 5px;
+    padding: 10px;
+    h4 {
+      color: #721c24;
+    }
+    p {
+      color: #721c24;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .account-info {
+    flex-direction: column;
+  }
+
+  .profile-card {
+    width: 100%; /* Make the card full-width on smaller screens */
+  }
+}

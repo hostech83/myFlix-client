@@ -24,11 +24,13 @@ export const MainView = () => {
 
   // An array of all genres for the filter function
   const genres = [];
-  movies.forEach((movie) => {
-    if (!genres.includes(movie.genre.name)) {
-      genres.push(movie.genre.name);
-    }
-  });
+  if (movies && movies.length > 0) {
+    movies.forEach((movie) => {
+      if (!genres.includes(movie.genre.name)) {
+        genres.push(movie.genre.name);
+      }
+    });
+  }
 
   const onLogout = () => {
     setUser(null);
@@ -70,7 +72,7 @@ export const MainView = () => {
     const method = isFavorite ? "DELETE" : "POST";
 
     fetch(
-      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.Username}/movies/${movieId}`,
+      `https://moro-flix-f9ac320c9e61.herokuapp.com/users/${user.username}/movies/${movieId}`,
       {
         method: method,
         headers: {
@@ -81,6 +83,9 @@ export const MainView = () => {
     )
       .then((response) => response.json())
       .then((updatedUser) => {
+        if (!updatedUser.username) {
+          throw updatedUser;
+        }
         setUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
       })
@@ -124,7 +129,7 @@ export const MainView = () => {
               element={
                 !user ? (
                   <Navigate to="/login" replace />
-                ) : movies.length === 0 ? (
+                ) : !movies || movies.length === 0 ? (
                   <Col className="loading">
                     <Spinner animation="border" variant="success" />
                     <br />
@@ -148,10 +153,11 @@ export const MainView = () => {
                 !user ? (
                   <Navigate to="/login" replace />
                 ) : (
-                  <Col md={5}>
+                  <Col md={8}>
                     <ProfileView
                       user={user}
                       token={token}
+                      movies={movies}
                       setUser={setUser}
                       onLogout={onLogout}
                     />
@@ -170,12 +176,12 @@ export const MainView = () => {
                     <br />
                     Loading movie data...
                   </Col>
-                ) : movies.length === 0 ? (
+                ) : !movies || movies.length === 0 ? (
                   <Col className="loading">The list is empty...</Col>
                 ) : (
                   <>
                     <Row>
-                      <Col md={6} sm={12}>
+                      <Col md={8} sm={12}>
                         <Form.Control
                           type="text"
                           placeholder="Search..."
