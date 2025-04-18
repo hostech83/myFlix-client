@@ -1,7 +1,11 @@
 /* navigation-bar.scss */
 .navigation-bar {
-  background-color: #033465; /* Dark background for the navbar */
-  padding: 10px;
+  background-color: deeppink;
+  padding: 0.75rem 1.5rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   .navbar-brand {
     color: #fff; /* White color for brand text */
