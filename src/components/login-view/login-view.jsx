@@ -11,10 +11,8 @@ export const LoginView = ({ onLoggedIn }) => {
     // Prevent the default behavior of the form which is to reload the entire page
     event.preventDefault();
 
-    const data = {
-      username,
-      password,
-    };
+    const data = { username, password };
+    //console.log("Login attempt with:", data);
 
     fetch("https://moro-flix-f9ac320c9e61.herokuapp.com/login", {
       method: "POST",
@@ -23,24 +21,26 @@ export const LoginView = ({ onLoggedIn }) => {
       },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log("Server response status:", response.status);
+        return response.json();
+      })
       .then((data) => {
-        console.log("Login response: ", data);
+        console.log("Login response data: ", data);
         if (data.user) {
           onLoggedIn(data.user, data.token);
         } else {
           alert("No such user");
         }
       })
-      .catch((e) => {
+      .catch((error) => {
+        console.error("Login error:", error);
         alert("Something went wrong");
       });
   };
 
   return (
     <div className="login-view">
-      {" "}
-      {/* Wrap the CardGroup in a div with class login-view */}
       <CardGroup>
         <Card>
           <CardHeader>
