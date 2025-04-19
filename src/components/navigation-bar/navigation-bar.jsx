@@ -9,7 +9,7 @@ export const NavigationBar = ({ user, onLogout }) => {
   return (
     <>
       <Navbar
-        bg="blue"
+        bg="dark"
         expand="lg"
         expanded={expanded}
         className="navigation-bar"
