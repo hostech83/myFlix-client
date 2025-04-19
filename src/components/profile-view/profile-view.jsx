@@ -125,10 +125,11 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
   return (
     <Container>
       <Row className="account-info mt-5 mb-5">
-        <Col xs={12} sm={8} md={8} lg={8}>
+        {/* Left Column for Current Info */}
+        <Col xs={12} md={6} className="mb-4">
           <Card>
             <Card.Header>
-              <h3>{userData.username}'s Current Info</h3>
+              <h3>{userData.username} : Current Info</h3>
             </Card.Header>
             <Card.Body>
               <p>
@@ -159,7 +160,8 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
           </Card>
         </Col>
 
-        <Col md={8}>
+        {/* Right Column for Update Form */}
+        <Col xs={12} md={6}>
           <Card>
             <Card.Header>
               <h3>Update your Info</h3>
@@ -208,7 +210,7 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
                   />
                 </Form.Group>
 
-                <Button variant="success" type="submit">
+                <Button className="blue-button" type="submit">
                   Submit
                 </Button>
               </Form>
@@ -217,9 +219,12 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
         </Col>
       </Row>
 
+      {/* Favorite Movies Section */}
       <hr />
-      <Row className="mt-3">
-        <h2>{user.username}'s Favorite Movies:</h2>
+      <Row className="mt-3 favorite-movies-grid">
+        <h2 className="favorite-movies-title">
+          {user.username}: Favorite Movies:
+        </h2>
         {favoriteMovies.length > 0 ? (
           favoriteMovies.map((movie) => (
             <Col
@@ -247,9 +252,10 @@ export const ProfileView = ({ user, token, movies, onLoggedOut, setUser }) => {
         )}
       </Row>
 
+      {/* Watchlist Section */}
       <hr />
-      <Row className="mt-5">
-        <h2>{user.username}'s Watchlist:</h2>
+      <Row className="mt-5 watchlist-grid">
+        <h2 className="watchlist-title">{user.username}: Watchlist:</h2>
         {watchlistMovies.length > 0 ? (
           watchlistMovies.map((movie) => (
             <Col
