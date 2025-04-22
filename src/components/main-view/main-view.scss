@@ -1,10 +1,15 @@
 // main-view.scss
+.myflix-root {
+  background: #23252b;
+  min-height: 100vh;
+  padding: 1rem;
+}
 
 // General layout
 .container {
   padding: 2rem;
   min-height: 100vh;
-  background-color: #100c08;
+  background-color: #23252b;
 }
 
 .row {

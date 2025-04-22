@@ -1,23 +1,32 @@
 /* navigation-bar.scss */
 .navigation-bar {
-  background-color: deeppink;
-  padding: 0.75rem 1.5rem;
-
+  background-color: #23252b;
+  padding: 0;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100vw;
+  height: 80px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 
   .navbar-brand {
-    color: #fff; /* White color for brand text */
-    font-size: 1.5rem; /* Larger font size for the brand */
+    color: yellow;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-left: 20px;
     &:hover {
-      color: #f8f9fa; /* Slightly lighter on hover */
+      color: #007bff;
     }
   }
 
   .navbar-toggler {
     border: none;
     outline: none;
+    margin-right: 20px;
 
     &:focus {
       box-shadow: none;
@@ -25,24 +34,31 @@
   }
 
   .nav-link {
-    color: #f8f9fa; /* White for nav links */
-    font-size: 1.1rem;
-    padding: 10px 15px;
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 15px 20px;
+    margin: 0 5px; // Add some margin between links
     &:hover {
-      color: #007bff; /* Blue on hover */
-      background-color: #495057; /* Darker background on hover */
+      color: #f0f0f0;
+      background-color: #495057;
       border-radius: 5px;
     }
   }
 
   .nav-link.active {
-    background-color: #007bff; /* Highlight active link */
+    background-color: #007bff;
     border-radius: 5px;
-    color: white !important;
+    color: #007bff;
   }
-}
 
-/* Optional: Style for the main content */
-.main-content {
-  margin-top: 60px; /* Adjust this based on the size of the navbar */
+  // Adjust the container to take full width
+  .container-fluid {
+    padding: 0;
+  }
+
+  // Style the collapse menu to take full width
+  .navbar-collapse {
+    background-color: #23252b;
+    padding-left: 20px;
+  }
 }
